@@ -21,13 +21,20 @@ nohup mproxy --p=777  &
 
 ###启动参数
 
-+ p=777,*//代理监听端口，必选*
-+ m=middleware,*//中间件文件路径，可选*
-+ b=x.x.x.x:777,*//桥接代理地址，可选*
-+ n=mproxy,*//代理名称，将传给下一个代理*
-+ save,*//保存本次启动参数，下次可省略*
-+ kill,*//kill已启动的mproxy(linux)*
-+ track,*//打印转发信息，默认不打印*
+```
+	/*
+		p=777			--代理监听端口，必选
+		m=middleware	--中间件文件路径，可选
+		b=x.x.x.x:777	--桥接代理地址，可选
+		n=mproxy		--代理名称，将传给下一个代理
+		save			--保存本次启动参数，下次可省略
+		kill			--kill已启动的mproxy(linux)
+		track			--打印转发信息，默认不打印
+	*/
+	//完整示例
+	mproxy -p=777 -m=middleware -b=192.168.0.1:777 -n=mproxy --kill --track --save
+
+```
 
 ###桥接
 
