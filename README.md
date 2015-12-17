@@ -8,14 +8,14 @@ npm install mproxy -g
 
 
 ```
-mproxy --p=777  
+mproxy  
 
 ```
 
 ###后台启动(linux)
 
 ```
-nohup mproxy --p=777  &
+nohup mproxy  &
 
 ```
 
@@ -23,20 +23,29 @@ nohup mproxy --p=777  &
 
 ```
 	/*
-		p=777			--代理监听端口，必选
-		m=middleware	--中间件文件路径，可选
-		b=x.x.x.x:777	--桥接代理地址，可选
-		n=mproxy		--代理名称，将传给下一个代理
-		save			--保存本次启动参数，下次可省略
-		kill			--kill已启动的mproxy(linux)
-		track			--打印转发信息，默认不打印
+		//常用参数
+		p=9999			--代理监听端口，默认9999
+		b=ip:port		--桥接代理地址，默认空
+		t=normal		--代理类型（bridge | tunnel | node | normal）,默认normal
+						--bridge 该代理仅有下级代理，下级代理地址通过--b传入，发送数据启用TLS
+						--tunnel 该代理有上下级代理，接收和发送均启用TLS
+						--node 该代理仅有上级代理，接收启用TLS
+
+		//密钥对
+		cert=""			--公钥路径，默认使用系统自带
+		key=""			--私钥路径，默认使用系统自带
+
+		//操作参数
+		save			--保存本次启动参数，下次可省略，默认不保存
+		kill			--kill已启动的mproxy(linux)，默认不kill
+		debug			--打印调试信息，默认不打印
 	*/
-	//完整示例
-	mproxy -p=777 -m=middleware -b=192.168.0.1:777 -n=mproxy --kill --track --save
+	//不完整示例
+	mproxy -p=9999  -b=127.0.0.1:9998 -t=bridge --kill  --save
 
 ```
 
-###桥接
+###代理桥接
 
 你可以将部署在不同服务器上的mproxy桥接起来
 
@@ -45,32 +54,18 @@ mproxy --b=服务器IP:服务器端口
 
 ```
 
-###中间件
+###加密传输
 
 ```
-module.exports = function(request,response,next){
-	
-	//你的代码
-	
 	/*
-		你可以通过request读取或修改这些值来改变你的请求
-		request.url,请求地址，字符串,如有修改请更新request.headers['Host']
-		request.headers,请求头，Key-Value对象
-		request.body,请求体，Buffer
-		request.address,目标地址，字符串，格式："IP:端口"，比如："xx.xx.xx.xx:80"
-		request.cookies,Key-Value对象,修改无效，修改cookie请设置request.headers['Cookie']
+		mproxy会自动学习，在两个mproxy之间使用TLS加密传输
+		建议主动申明代理的类型[bridge,tunnel,node,normal]
+		建议传入cert和key参数，使用openssl生成自定义密钥对
 	*/
-
-	/*
-		你可以通过response来向客服端直接输出内容
-		response.write,向客户端写入内容
-		response.end,向客户端写入内容并关闭
-	*/
-
-	//如果需要继续执行下去，主动调用next。如有异步操作请在异步回调函数中调用
-	next()
-}
 
 ```
+
+
+
 
 
